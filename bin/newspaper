@@ -1,0 +1,53 @@
+#!/bin/bash
+
+if [[ -z $1 ]]
+then
+	date=$(date '+%Y/%m/%d');
+else
+	date=$1;
+fi
+
+cachedir="$HOME/Documents/Newspaper"
+datedir=$(sed 's/\//-/g' <<<$date)
+
+main="main"
+mycity="mycity"
+rupayan="rupayan"
+
+rm -rf $cachedir/$datedir
+
+mkdir -p $cachedir/$datedir/$main
+mkdir -p $cachedir/$datedir/$mycity
+mkdir -p $cachedir/$datedir/$rupayan
+
+cd  $cachedir/$datedir/$main
+rm *.jpg
+
+cd
+
+cd  $cachedir/$datedir/$mycity
+rm *.jpg
+
+cd
+
+cd  $cachedir/$datedir/$rupayan
+rm *.jpg
+
+for i in 0{1..9} {10..50} ;
+do
+	wget -nc -O $cachedir/$datedir/$main/$i.jpg https://epaperwmimg.amarujala.com/$date/ac/$i/hdimage.jpg || break
+done
+
+for i in 0{1..9} {10..50} ;
+do
+	wget -nc -O $cachedir/$datedir/$mycity/$i.jpg https://epaperwmimg.amarujala.com/$date/my/ac/$i/hdimage.jpg || break
+done
+
+for i in 0{1..9} {10..50} ;
+do
+	wget -nc -O $cachedir/$datedir/$rupayan/$i.jpg https://epaperwmimg.amarujala.com/$date/ru/ag/$i/hdimage.jpg || break
+done
+
+notify-send "Your newspaper for today is here"
+
+sxiv -z 75 $cachedir/$datedir/$main
